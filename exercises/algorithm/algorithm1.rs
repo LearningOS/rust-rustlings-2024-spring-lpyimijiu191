@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +68,50 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+
+	pub fn merge(mut list_a: LinkedList<T>, mut list_b: LinkedList<T>) -> LinkedList<T>
+    where
+        T: Clone + PartialOrd,
+    {
+        let (mut a_nodes, mut b_nodes) = (Vec::new(), Vec::new());
+
+        for i in 0..(list_a.length as i32) {
+            if let Some(val) = list_a.get(i) {
+                a_nodes.push(val.clone());
+            }
         }
-	}
+
+        for i in 0..(list_b.length as i32) {
+            if let Some(val) = list_b.get(i) {
+                b_nodes.push(val.clone());
+            }
+        }
+
+        let (mut i, mut j) = (0, 0);
+        let mut merged_list = LinkedList::new();
+
+        while i < a_nodes.len() && j < b_nodes.len() {
+            if a_nodes[i] <= b_nodes[j] {
+                merged_list.add(a_nodes[i].clone());
+                i += 1;
+            } else {
+                merged_list.add(b_nodes[j].clone());
+                j += 1;
+            }
+        }
+
+        while i < a_nodes.len() {
+            merged_list.add(a_nodes[i].clone());
+            i += 1;
+        }
+
+        while j < b_nodes.len() {
+            merged_list.add(b_nodes[j].clone());
+            j += 1;
+        }
+
+        merged_list
+    }
 }
 
 impl<T> Display for LinkedList<T>

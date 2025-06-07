@@ -34,9 +34,17 @@
 // Execute `rustlings hint tests7` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+use std::time::{SystemTime, UNIX_EPOCH};
 
-fn main() {}
+fn main() {
+    // 在 build.rs 中将 TEST_FOO 设置为当前时间戳，以确保测试运行时的时间戳落在 TEST_FOO 到 TEST_FOO + 10 的范围内。
+    let timestamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+
+    println!("cargo:rustc-env=TEST_FOO={}", timestamp);
+}
 
 #[cfg(test)]
 mod tests {
@@ -44,12 +52,14 @@ mod tests {
 
     #[test]
     fn test_success() {
-        let timestamp = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_secs();
+
         let s = std::env::var("TEST_FOO").unwrap();
         let e: u64 = s.parse().unwrap();
+
         assert!(timestamp >= e && timestamp < e + 10);
     }
 }

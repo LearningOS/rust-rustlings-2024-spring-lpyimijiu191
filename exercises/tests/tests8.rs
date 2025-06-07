@@ -7,13 +7,24 @@
 // Execute `rustlings hint tests8` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+use std::time::{SystemTime, UNIX_EPOCH};
 
-fn main() {}
+fn main() {
+    let timestamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+
+    // 为 tests7 设置 TEST_FOO
+    println!("cargo:TEST_FOO={}", timestamp);
+
+    // 为 tests8 启用 pass 特性
+    println!("cargo:rustc-cfg=feature=\"pass\"");
+}
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    // 不再需要导入 super::*，因为它未被使用
 
     #[test]
     fn test_success() {
